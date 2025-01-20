@@ -12,7 +12,7 @@ const courseSchema = mongoose.Schema({
         required:true,
     },
     course_fee:{
-        type:Decimal128,
+        type:mongoose.Schema.Types.Decimal128,
         required:true,
     },
     available_seats:{
@@ -28,8 +28,14 @@ const courseSchema = mongoose.Schema({
         default:true,
     },
 },{timestamps:true});
-courseSchema.pre('save',(next)=>{
-  
-})
+
+courseSchema.pre('save', function(next) {
+    function generate_slug(text) {
+        return text.toLowerCase().replace(/[^\w ]+/g,'').replace(/ +/g,'-').trim();
+    };
+    this.slug = generate_slug(this.title);
+    next();
+});
+
 const COURSE = mongoose.model('course',courseSchema);
 module.exports = COURSE;
