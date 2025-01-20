@@ -17,4 +17,11 @@ const createUser = async (req,res)=>{
     }
     
 }
-module.exports = {createUser};
+const featchTeacher = async (req,res)=>{
+    try {
+        let teachers = await USER.find({$and:[{}]})
+    } catch (error) {
+        
+    }
+}
+module.exports = {createUser,featchTeacher};

@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const slug = require('mongoose-slug-generator');
+mongoose.plugin(slug);
 const courseSchema = mongoose.Schema({
     title:{
         type:String,
@@ -6,6 +8,7 @@ const courseSchema = mongoose.Schema({
     },
     slug:{
       type:String,
+      slug:'title',
     },
     description:{
         type:String,
@@ -28,14 +31,6 @@ const courseSchema = mongoose.Schema({
         default:true,
     },
 },{timestamps:true});
-
-courseSchema.pre('save', function(next) {
-    function generate_slug(text) {
-        return text.toLowerCase().replace(/[^\w ]+/g,'').replace(/ +/g,'-').trim();
-    };
-    this.slug = generate_slug(this.title);
-    next();
-});
 
 const COURSE = mongoose.model('course',courseSchema);
 module.exports = COURSE;
