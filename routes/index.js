@@ -7,6 +7,6 @@ router.post('/create-user',createUser);
 //------------------COURSE ROUTES---------------//
 router.post('/create-course',createCourse);
 //------------------TEACHER RELATED ROUTES------//
-router.post('/get-teacher',featchTeacher);
+router.get('/fetch-teacher',featchTeacher);
 
 module.exports = router;

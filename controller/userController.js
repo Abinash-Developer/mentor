@@ -19,9 +19,17 @@ const createUser = async (req,res)=>{
 }
 const featchTeacher = async (req,res)=>{
     try {
-        let teachers = await USER.find({$and:[{}]})
+        let teachers = await USER.find({$and:[{role:'teacher'},{status:true}]});
+        res.json({
+            message: 'Teachers fetched successfully',
+            status: true,
+            send: (teachers)
+         })
     } catch (error) {
-        
+        res.json({
+            message: 'Teachers fetched fail',
+            status: false,
+         })
     }
 }
 module.exports = {createUser,featchTeacher};
