@@ -2,6 +2,11 @@ const mongoose = require('mongoose');
 const slug = require('mongoose-slug-generator');
 mongoose.plugin(slug);
 const courseSchema = mongoose.Schema({
+    category_id:{
+     type:mongoose.Schema.Types.ObjectId,
+     ref:'category',
+     required:true,
+    },
     title:{
         type:String,
         required:true,
