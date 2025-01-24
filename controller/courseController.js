@@ -1,7 +1,9 @@
 const COURSE = require('../model/courseModel');
 const createCourse = async (req,res)=>{
+ 
     try {
-        const course = new COURSE(req.body);
+        const courseRecord = {...req.body,image:`${req.file?.destination}/${req.file?.filename}`};
+        const course = new COURSE(courseRecord);
         const courserInResult = await course.save();    
         res.json({
             message: 'Course register success',
@@ -46,6 +48,25 @@ const fetchCourses = async (req,res)=>{
                 foreignField:"_id",
                 as:"teache_details"
             }
+           },
+           {
+            $project:{
+                title:1,
+                description:1,
+                course_fee:1,
+                slug:1,
+                image:1,
+                category_details:{
+                    title:1,
+                },
+                teache_details:{
+                    name:1,
+                    email:1,
+                    description:1,
+                    role:1,
+                    image:1
+                }
+             }
            }
       ]);
       res.json({

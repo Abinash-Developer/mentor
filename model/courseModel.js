@@ -19,6 +19,10 @@ const courseSchema = mongoose.Schema({
         type:String,
         required:true,
     },
+    image:{
+      type:String,
+      required:true,
+    },
     course_fee:{
         type:mongoose.Schema.Types.Decimal128,
         required:true,

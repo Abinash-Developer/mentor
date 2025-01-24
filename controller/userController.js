@@ -2,9 +2,9 @@ const USER = require("../model/userModel");
 const ASSIGNEDCOURSE = require("../model/assignedCourseModel");
 const createUser = async (req, res) => {
   try {
-    let user = new USER(req.body);
+    const userRecord = {...req.body,image:`${req.file?.destination}/${req.file?.filename}`};
+    let user = new USER(userRecord);
     const savedUser = await user.save();
-
     res.json({
       message: "User register success",
       status: true,
@@ -50,27 +50,16 @@ const featchTeacher = async (req, res) => {
           as: "category_details",
         },
       },
-      {
+     {
         $project: {
           name: 1,
-          email: 1,
           description:1,
-          role: 1,
-          assigned_course: {
-            course_id: 1,
-          },
-          course_details: {
-            title: 1,
-            description: 1,
-          },
+          image:1,
           category_details: {
             title: 1,
           },
         },
-      },
-      {
-        $limit: 3,
-      },
+      }
     ]);
     res.json({
       message: "Teachers fetched successfully",
