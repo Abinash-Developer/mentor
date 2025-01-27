@@ -1,3 +1,4 @@
+const { default: mongoose } = require('mongoose');
 const COURSE = require('../model/courseModel');
 const createCourse = async (req,res)=>{
  
@@ -70,12 +71,68 @@ const fetchCourses = async (req,res)=>{
            }
       ]);
       res.json({
-        message: 'Course register success',
+        message: 'Courses fetches successfully',
         status: true,
         send: (courses)
      })
     } catch (error) {
-        console.log(error); 
+        res.json({
+            message: 'Courses Fetched fail',
+            status: false,
+         })
     }
 }
-module.exports = {createCourse,fetchCourses};
+const fetchCoursesById = async (req,res)=>{
+    try {
+        const singleCourseResult = await COURSE.aggregate([
+            {
+                $match:{
+                    _id: new mongoose.Types.ObjectId(req.params.id),
+                }
+            },
+            {
+                $lookup:{
+                    from:"assignedcourses",
+                    localField:"_id",
+                    foreignField:"course_id",
+                    as:"assigned_detail"
+                }
+            },
+            {
+                $lookup:{
+                    from:"users",
+                    localField:"assigned_detail.user_id",
+                    foreignField:"_id",
+                    as:"teacher_details"
+                }
+            },
+            {
+                $project:{
+                    title:1,
+                    description:1,
+                    image:1,
+                    course_fee:1,
+                    available_seats:1,
+                    schedule:1,
+                    teacher_details:{
+                        name:1,
+                        email:1,
+                        description:1,
+                        image:1,
+                    }
+                }
+             }
+        ])
+        res.json({
+            message: 'Fetch course successfully',
+            status: true,
+            send: (singleCourseResult)
+         })
+    } catch (error) {
+        res.json({
+            message: 'Courses Fetched fail',
+            status: false,
+         })
+    }
+}
+module.exports = {createCourse,fetchCourses,fetchCoursesById};
