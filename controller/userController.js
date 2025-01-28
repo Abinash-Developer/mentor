@@ -1,5 +1,6 @@
 const USER = require("../model/userModel");
 const ASSIGNEDCOURSE = require("../model/assignedCourseModel");
+const jwt = require('jsonwebtoken');
 const createUser = async (req, res) => {
   try {
     const userRecord = {...req.body,image:`${req.file?.destination}/${req.file?.filename}`};
@@ -17,6 +18,33 @@ const createUser = async (req, res) => {
     });
   }
 };
+const createStudent = async (req,res)=>{
+  try {
+    let checkExistUser = await USER.find({$and:[{email:req.body.email},{status:true},{role:'student'}]}) ;
+    if(Array.isArray(checkExistUser) && !checkExistUser.length){
+      let user = new USER(req.body);
+      const savedUser = await user.save();
+      const token = jwt.sign({ userId: savedUser._id }, 'mentor-app-jwt', {
+        expiresIn: '1h',
+        });
+      return res.json({
+        message: "User logged in successfully",
+        status: true,
+        token:token,
+      });
+    }
+    const token = jwt.sign({ userId: checkExistUser._id }, 'mentor-app-jwt', {
+      expiresIn: '1h',
+      });
+    return res.json({
+      message: "User logged in successfully",
+      status: true,
+      token:token,
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Login failed' });;
+  }
+} 
 const featchTeacher = async (req, res) => {
   try {
     let teachers = await USER.aggregate([
@@ -89,4 +117,4 @@ const assignCourse = async (req, res) => {
     });
   }
 };
-module.exports = { createUser, featchTeacher, assignCourse };
+module.exports = { createUser, featchTeacher, assignCourse,createStudent };
