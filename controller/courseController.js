@@ -1,5 +1,6 @@
 const { default: mongoose } = require('mongoose');
 const COURSE = require('../model/courseModel');
+const BATCH = require('../model/batchModel');
 const createCourse = async (req,res)=>{
  
     try {
@@ -115,6 +116,7 @@ const fetchCoursesById = async (req,res)=>{
                     available_seats:1,
                     schedule:1,
                     teacher_details:{
+                        _id:1,
                         name:1,
                         email:1,
                         description:1,
@@ -123,13 +125,15 @@ const fetchCoursesById = async (req,res)=>{
                 }
              }
         ])
-        res.json({
+        let availableBatch = await BATCH.findOne({teacher_id:singleCourseResult[0].teacher_details?.[0]?._id}).sort("batch_start");
+        singleCourseResult[0].batch_name = availableBatch?.title;
+        return res.json({
             message: 'Fetch course successfully',
             status: true,
             send: (singleCourseResult)
          })
     } catch (error) {
-        res.json({
+        return res.json({
             message: 'Courses Fetched fail',
             status: false,
          })
