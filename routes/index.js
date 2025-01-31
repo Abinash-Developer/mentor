@@ -24,9 +24,9 @@ router.post('/assign-course',assignCourse);
 //------------------CATEGORY RELATED ROUTES------//
 router.post('/create-category',createCategory);
 
-//------------------BATCH RELATED ROUTES------//
+//------------------BATCH RELATED ROUTES---------//
 router.post('/create-batch',createBatch);
 
-//------------------BOOKING RELATED ROUTES------//
+//------------------BOOKING RELATED ROUTES-------//
 router.get('/create-payment-intent',createPaymentIntent);
 module.exports = router;
