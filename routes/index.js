@@ -1,15 +1,19 @@
 const express = require('express');
 const router = express.Router();
 const upload = require('../config/multer');
-const {createUser,featchTeacher, assignCourse, createStudent} = require('../controller/userController');
+const {createUser,featchTeacher, assignCourse, createStudent, fetchStudentById} = require('../controller/userController');
 const {createCourse, fetchCourses, fetchCoursesById}=require('../controller/courseController');
 const { createCategory } = require('../controller/categoryController');
 const { createBatch } = require('../controller/batchController');
-const createPaymentIntent = require('../controller/bookingController');
+const {createPaymentIntent, createBookingDetails} = require('../controller/bookingController');
+const {varifyToken, varifySession} = require('../middleware/varifyMiddleware');
 
+
+router.post('/varifySession/',varifySession)
 //------------------USER ROUTES-----------------//
 router.post('/create-teacher',upload.single('image'),createUser);
 router.post('/create-student',createStudent);
+router.post('/fetch-student/',varifyToken,fetchStudentById)
 
 //------------------COURSE ROUTES---------------//
 router.post('/create-course',upload.single('image'),createCourse);
@@ -28,5 +32,6 @@ router.post('/create-category',createCategory);
 router.post('/create-batch',createBatch);
 
 //------------------BOOKING RELATED ROUTES-------//
-router.get('/create-payment-intent',createPaymentIntent);
+router.post('/create-payment-intent',varifyToken,createPaymentIntent);
+router.get('/booked-details',varifyToken,createBookingDetails);
 module.exports = router;
