@@ -33,5 +33,5 @@ router.post('/create-batch',createBatch);
 
 //------------------BOOKING RELATED ROUTES-------//
 router.post('/create-payment-intent',varifyToken,createPaymentIntent);
-router.get('/booked-details',varifyToken,createBookingDetails);
+router.post('/booked-details',varifyToken,createBookingDetails);
 module.exports = router;

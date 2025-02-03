@@ -26,7 +26,7 @@ const createStudent = async (req,res)=>{
       let user = new USER(req.body);
       const savedUser = await user.save();
       const token = jwt.sign({ userId: savedUser._id }, 'mentor-app-jwt', {
-          expiresIn: '1h',
+          expiresIn: 3600,
         });
         return res.json({
           message: "User logged in successfully",
@@ -34,8 +34,10 @@ const createStudent = async (req,res)=>{
           token:token,
         });
     }
+    // console.log(checkExistUser);
+    // return;
     const token = jwt.sign({ userId: checkExistUser[0]._id }, 'mentor-app-jwt', {
-        expiresIn: '1h',
+        expiresIn: 3600,
       });
     return res.json({
       message: "User logged in successfully",
